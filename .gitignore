@@ -1,6 +1,38 @@
-venv/
-.env
+# Python / Virtual Environments
 __pycache__/
-node_modules/
+*.py[cod]
+*$py.class
+*.so
+.venv/
+venv/
+ENV/
+env/
+
+# IDEs & Editors
 .vscode/
-.DS_Store
+.idea/
+*.swp
+*.swo
+
+# Environment Variables & Secrets
+.env
+
+# Docker & Database Volumes
+postgres_data/
+.docker/
+
+# Distribution / Packaging
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg

@@ -1,21 +1,38 @@
 version: '3.8'
 
 services:
-  postgres_db:
+  postgres:
     image: postgres:15-alpine
     container_name: clinicared_postgres
-    restart: always
     environment:
-      POSTGRES_USER: ${DB_USER}
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
-      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: Jeas888
+      POSTGRES_DB: clinicared_db
     ports:
       - "5432:5432"
     volumes:
-      # Esto ejecuta tu script SQL automáticamente la primera vez que se crea el contenedor
-      - ./docs/database/01_init_schema.sql:/docker-entrypoint-initdb.d/01_init_schema.sql
-      # Esto guarda los datos para que no se borren si apagas el contenedor
-      - pgdata:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d clinicared_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build: .
+    container_name: clinicared_backend
+    restart: always
+    ports:
+      - "8000:8000"
+    environment:
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_NAME=clinicared_db
+      - DB_USER=postgres
+      - DB_PASSWORD=Jeas888
+    depends_on:
+      postgres:
+        condition: service_healthy
 
 volumes:
-  pgdata:
+  postgres_data:
